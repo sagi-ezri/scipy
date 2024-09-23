@@ -1302,7 +1302,7 @@ def fwind1(hsize, window, fc=None, fs=2, circular=False):
         Desired window to use for each 1D filter or a single window type 
         for creating circularly symmetric 2-D windows. Each element should be
         a string or tuple of string and parameter values. See
-        'scipy.signal.get_window' for a list of windows and required
+        `~scipy.signal.get_window` for a list of windows and required
         parameters.
     fc : float or 1-D array_like, optional
         Cutoff frequency of filter (expressed in the same units as `fs`).
@@ -1329,50 +1329,32 @@ def fwind1(hsize, window, fc=None, fs=2, circular=False):
 
     See Also
     --------
-    scipy.signal.firwin, scipy.signal.get_window
+    firwin:  Function used here to design onedimensional FIR filters.
+    get_window: Function used by `firwin` to select window.
 
     Examples
     --------
-    Generate a 5x5 low-pass filter with cutoff frequency 0.1.
+    The following example creates two 2D FIR filters: The left plot is created
+    from the product of two Kaiser windows, whereas the right plot shows a
+    circular Flattop window:
 
+    >>> import matplotlib.pyplot as plt
     >>> import numpy as np
     >>> from scipy.signal import get_window
     >>> from scipy.signal import fwind1
-    >>> hsize = (5, 5)
-    >>> window = (("kaiser", 5.0), ("kaiser", 5.0))
-    >>> fc = 0.1
-    >>> filter_2d = fwind1(hsize, window, fc)
-    >>> filter_2d
-    array([[0.00025366, 0.00401662, 0.00738617, 0.00401662, 0.00025366],
-           [0.00401662, 0.06360159, 0.11695714, 0.06360159, 0.00401662],
-           [0.00738617, 0.11695714, 0.21507283, 0.11695714, 0.00738617],
-           [0.00401662, 0.06360159, 0.11695714, 0.06360159, 0.00401662],
-           [0.00025366, 0.00401662, 0.00738617, 0.00401662, 0.00025366]])
-
-    Generate a circularly symmetric 5x5 low-pass filter with Hamming window.
-
-    >>> filter_2d = fwind1((5, 5), 'hamming', circular=True)
-    >>> filter_2d
-    array([[0.08566336, 0.08566336, 0.08566336, 0.08566336, 0.08566336],
-           [0.08566336, 0.71034579, 0.99716832, 0.71034579, 0.08566336],
-           [0.08566336, 0.99716832, 0.08      , 0.99716832, 0.08566336],
-           [0.08566336, 0.71034579, 0.99716832, 0.71034579, 0.08566336],
-           [0.08566336, 0.08566336, 0.08566336, 0.08566336, 0.08566336]])
-
-    Plotting the generated 2D filters (optional).
-
-    >>> import matplotlib.pyplot as plt
-    >>> hsize, fc = (50, 50), 0.05
-    >>> window = (("kaiser", 5.0), ("kaiser", 5.0))
-    >>> filter0_2d = fwind1(hsize, window, fc)
-    >>> filter1_2d = fwind1((50, 50), 'hamming', circular=True)
-
+    ...
+    >>> hsize, fc = (50, 50), 0.1  # array size and cut-off frequency
+    >>> windows = (("kaiser", 5.0), ("kaiser", 5.0))
+    ...
+    >>> filt0_2d = fwind1(hsize, windows, fc)
+    >>> filt1_2d = fwind1(hsize, 'flattop', fc, circular=True)
+    ...
     >>> fg, (ax0, ax1) = plt.subplots(1, 2, tight_layout=True, figsize=(6.5, 3.5))
     >>> ax0.set_title("Product of 2 Windows")
-    >>> im0 = ax0.imshow(filter0_2d, cmap='viridis', origin='lower', aspect='equal')
+    >>> im0 = ax0.imshow(filt0_2d, cmap='viridis', origin='lower', aspect='equal')
     >>> fg.colorbar(im0, ax=ax0, shrink=0.7)
     >>> ax1.set_title("Circular Window")
-    >>> im1 = ax1.imshow(filter1_2d, cmap='plasma', origin='lower', aspect='equal')
+    >>> im1 = ax1.imshow(filt1_2d, cmap='plasma', origin='lower', aspect='equal')
     >>> fg.colorbar(im1, ax=ax1, shrink=0.7)
     >>> plt.show()
     """
